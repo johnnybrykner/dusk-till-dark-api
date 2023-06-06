@@ -2,6 +2,7 @@
 
 module DuskAPI
   class Routes < Hanami::Routes
-    root { "Hello from Hanami" }
+    root to: "home.show"
+    get "/users", to: "users.index"
   end
 end
