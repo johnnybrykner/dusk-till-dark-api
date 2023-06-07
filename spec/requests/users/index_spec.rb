@@ -1,4 +1,4 @@
-# spec/requests/root_spec.rb
+# spec/requests/index_spec.rb
 
 RSpec.describe "GET /users", type: :request do
   it "returns a list of users" do
