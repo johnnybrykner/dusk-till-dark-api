@@ -24,7 +24,7 @@ RSpec.describe "GET /users/:username", type: [:request, :database] do
       response_body = JSON.parse(last_response.body)
 
       expect(response_body).to eq(
-        "error" => "not_found"
+        "error" => "User not found"
       )
     end
   end

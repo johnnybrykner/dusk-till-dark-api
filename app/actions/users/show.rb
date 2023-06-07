@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require "oj"
-require_relative "../../../lib/dynamodb_service"
 
 module DuskAPI
   module Actions
@@ -11,10 +10,9 @@ module DuskAPI
         end
 
         def handle(request, response)
-          dynamodb_service = DynamoDBService.new
+          puts "jwt_payload: #{request.env['jwt_payload']}"
+          dynamodb_service = DuskAPI::DynamodbService.new
           user = dynamodb_service.get_user(request.params[:username])
-
-          puts "user: #{user}"
 
           response.format = :json
         
@@ -22,7 +20,7 @@ module DuskAPI
             response.body = Oj.dump(user)
           else
             response.status = 404
-            response.body = {error: "not_found"}.to_json
+            response.body = {error: "User not found"}.to_json
           end
         end
       end

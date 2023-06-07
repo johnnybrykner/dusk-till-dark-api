@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require "oj"
-require_relative "../../../lib/dynamodb_service"
 
 module DuskAPI
   module Actions

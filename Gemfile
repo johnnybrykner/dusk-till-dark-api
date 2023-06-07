@@ -12,6 +12,7 @@ gem "puma"
 gem "rake"
 gem "nokogiri"
 gem "oj"
+gem "jwt"
 gem "aws-sdk-dynamodb", "1.85.0"
 
 group :development, :test do
