@@ -47,7 +47,7 @@ module DuskAPI
     end
 
     def remove_film(username, list_name, position_to_remove)
-      puts "Removing #{id_to_remove} from #{list_name} for #{username}"
+      puts "Removing [#{position_to_remove}] from #{list_name} for #{username}"
       key = { "username" => username }
       request_params = {
         table_name: @table_name,

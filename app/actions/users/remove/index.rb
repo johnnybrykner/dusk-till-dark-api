@@ -4,7 +4,7 @@ module DuskAPI
   module Actions
     module Users
       module Remove
-        class ToWatch < DuskAPI::Action
+        class Index < DuskAPI::Action
           def handle(*, response)
             response.body = self.class.name
           end

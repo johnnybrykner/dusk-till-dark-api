@@ -9,10 +9,8 @@ module DuskAPI
       use DuskAPI::JwtMiddleware
 
       get "/:username", to: "users.show"
-      post "/:username/add/to_watch", to: "users.add.to_watch"
-      post "/:username/add/previously_watched", to: "users.add.previously_watched"
-      delete "/:username/remove/previously_watched/:film_id", to: "users.remove.previously_watched"
-      delete "/:username/remove/to_watch/:film_id", to: "users.remove.to_watch"
+      post "/:username/add/:list_name", list_name: /(to_watch|previously_watched)/, to: "users.add.index"
+      delete "/:username/remove/:list_name/:film_id", to: "users.remove.index"
     end
   end
 end

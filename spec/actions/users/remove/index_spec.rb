@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DuskAPI::Actions::Users::Add::ToWatch do
+RSpec.describe DuskAPI::Actions::Users::Remove::Index do
   let(:params) { Hash[] }
 
   it "works" do
