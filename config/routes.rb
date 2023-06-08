@@ -11,8 +11,8 @@ module DuskAPI
       get "/:username", to: "users.show"
       post "/:username/add/to_watch", to: "users.add.to_watch"
       post "/:username/add/previously_watched", to: "users.add.previously_watched"
-      delete "/:username/remove/previously_watched", to: "users.remove.previously_watched"
-      delete "/:username/remove/to_watch", to: "users.remove.to_watch"
+      delete "/:username/remove/previously_watched/:film_id", to: "users.remove.previously_watched"
+      delete "/:username/remove/to_watch/:film_id", to: "users.remove.to_watch"
     end
   end
 end

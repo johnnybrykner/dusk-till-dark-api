@@ -10,12 +10,16 @@ module DuskAPI
         end
 
         def handle(request, response)
-          puts "jwt_payload: #{request.env['jwt_payload']}"
+          response.format = :json
+          if request.env["jwt_username"] != request.params[:username]
+            response.status = 401
+            response.body = {error: "Unauthorized"}.to_json
+            return
+          end
+
           dynamodb_service = DuskAPI::DynamodbService.new
           user = dynamodb_service.get_user(request.params[:username])
 
-          response.format = :json
-        
           if user
             response.body = Oj.dump(user)
           else
