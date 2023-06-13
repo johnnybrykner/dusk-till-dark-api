@@ -10,7 +10,7 @@ module DuskAPI
 
       get "/:username", to: "users.show"
       post "/:username/add/:list_name", list_name: /(to_watch|previously_watched)/, to: "users.add.index"
-      delete "/:username/remove/:list_name/:film_id", to: "users.remove.index"
+      delete "/:username/remove/:list_name/:film_id", list_name: /(to_watch|previously_watched)/, to: "users.remove.index"
     end
   end
 end

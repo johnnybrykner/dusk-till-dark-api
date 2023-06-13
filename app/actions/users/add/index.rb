@@ -35,7 +35,8 @@ module DuskAPI
               return
             end
 
-            response.body = Oj.dump(dynamodb_service.add_film(request.params[:username], request.params[:list_name], request.params[:film_to_add])["attributes"])
+            updated_user = dynamodb_service.add_film(request.params[:username], request.params[:list_name], request.params[:film_to_add])
+            response.body = Oj.dump(updated_user["attributes"])
           end
         end
       end
