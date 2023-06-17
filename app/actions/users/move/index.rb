@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "oj"
 
 module DuskAPI
   module Actions
@@ -7,7 +8,6 @@ module DuskAPI
         class Index < DuskAPI::Action
           params do
             required(:username).value(:string)
-            required(:list_name).value(:string)
             required(:film_id).value(:integer)
           end
 
@@ -24,18 +24,22 @@ module DuskAPI
             current_user = dynamodb_service.get_user(request.params[:username])
             halt 404, {error: "User not found"}.to_json unless current_user
 
-            currently_edited_list = current_user[request.params[:list_name]]
-            index_of_film_to_remove = currently_edited_list&.find_index { |film|
+            current_to_watch = current_user["to_watch"]
+            index_of_film_to_move = current_to_watch&.find_index { |film|
               film["id"].to_i == request.params[:film_id].to_i
             }
 
-            if index_of_film_to_remove.nil?
+            if index_of_film_to_move.nil?
               response.status = 404
               response.body = {error: "Film not found"}.to_json
               return
             end
 
-            # swap the film to the other list here
+            film_to_move = current_to_watch[index_of_film_to_move]
+
+            dynamodb_service.remove_film(request.params[:username], "to_watch", index_of_film_to_move)
+            updated_user = dynamodb_service.add_film(request.params[:username], "previously_watched", film_to_move)
+            response.body = Oj.dump(updated_user["attributes"])
           end
         end
       end

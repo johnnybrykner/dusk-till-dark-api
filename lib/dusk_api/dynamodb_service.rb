@@ -61,7 +61,5 @@ module DuskAPI
 
       @client.update_item(request_params)
     end
-
-    # Other methods for CRUD operations on DynamoDB can be added here
   end
 end
