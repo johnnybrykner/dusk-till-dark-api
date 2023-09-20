@@ -22,7 +22,6 @@ module DuskAPI
             response.status = 200
             response.body = "Successfully authenticated"
           else
-            response.cookies["account_token"] = nil
             response.status = 404
             response.body = {error: "User not found"}.to_json
           end
