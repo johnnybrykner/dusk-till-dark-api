@@ -7,7 +7,7 @@ module DuskAPI
     config.middleware.use :body_parser, :json
     config.actions.cookies = {
       httponly: true,
-      domain: "viiteksapi.nl",
+      domain: "localhost:8080",
       secure: true,
     }
   end
