@@ -14,6 +14,7 @@ gem "nokogiri"
 gem "oj"
 gem "jwt"
 gem "aws-sdk-dynamodb", "1.85.0"
+gem "rack-cors"
 
 group :development, :test do
   gem "dotenv"
