@@ -20,7 +20,7 @@ module DuskAPI
             token = jwt_service.generate_jwt_token(request.params[:username])
             response.cookies["account_token"] = token
             response.status = 200
-            response.body = "Successfully authenticated"
+            response.body = {message: "Successfully authenticated"}.to_json
           else
             response.status = 404
             response.body = {error: "User not found"}.to_json
