@@ -19,7 +19,7 @@ module DuskAPI
           if authenticated_user
             jwt_service = DuskAPI::JwtService.new
             token = jwt_service.generate_jwt_token(request.params[:username])
-            response.headers["Set-Cookie"] = "account_token=#{token}; SameSite=None; Secure; HttpOnly; Partitioned"
+            response.headers["Set-Cookie"] = "account_token=#{token}; SameSite=None; Path=/dusk_api/users; Secure; HttpOnly; Partitioned"
             response.status = 200
             response.body = Oj.dump(authenticated_user)
           else
