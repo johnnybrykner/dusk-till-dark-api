@@ -7,11 +7,12 @@ module DuskAPI
     end
 
     def call(env)
+      puts "JwtMiddleware called with env: #{env}"
       # Get the request cookie
       cookie = env["HTTP_COOKIE"]
       
       if cookie.nil? || !cookie.include?("account_token=")
-        return Rack::Response.new("Unauthorized", 401, { "Content-Type" => "application/json" }).finish
+        return Rack::Response.new({error: "Unauthorized"}.to_json, 401, { "Content-Type" => "application/json" }).finish
       end
 
       jwt_token = cookie.split("account_token=")[1].split(";")[0]
@@ -20,7 +21,7 @@ module DuskAPI
       begin
         jwt_username = jwt_service.decode_jwt_token(jwt_token)[0]
       rescue JWT::DecodeError
-        return Rack::Response.new("Unauthorized", 401, { "Content-Type" => "application/json" }).finish
+        return Rack::Response.new({error: "Invalid token"}.to_json, 401, { "Content-Type" => "application/json" }).finish
       end
 
       # Pass the request down the middleware stack
