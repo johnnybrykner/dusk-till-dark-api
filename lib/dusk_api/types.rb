@@ -17,5 +17,17 @@ module DuskAPI
       our_rating: Integer.meta(omittable: true),
       their_rating: Integer.meta(omittable: true),
     )
+
+    SettingsType = Hash.schema(
+      streaming_countries: Array.of(Hash.schema(
+        country_code: String,
+        country_name: String,
+      )),
+      streaming_providers: Array.of(Hash.schema(
+        provider_id: Integer,
+        provider_name: String,
+        logo_path: String.meta(omittable: true),
+      )),
+    )
   end
 end

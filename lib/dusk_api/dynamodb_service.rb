@@ -61,5 +61,24 @@ module DuskAPI
 
       @client.update_item(request_params)
     end
+
+    def update_settings(username, settings)
+      puts "Updating settings for #{username}"
+      key = { "username" => username }
+      request_params = {
+        table_name: @table_name,
+        key: key,
+        return_values: "ALL_NEW",
+        update_expression: "SET #current_settings = :updated_settings",
+        expression_attribute_names: {
+          "#current_settings": "account_settings",
+        },
+        expression_attribute_values: {
+          ":updated_settings": settings,
+        }
+      }
+
+      @client.update_item(request_params)
+    end
   end
 end
