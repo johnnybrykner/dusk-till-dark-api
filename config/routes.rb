@@ -5,7 +5,6 @@ module DuskAPI
     scope "/dusk_api" do
       root to: "home.show"
       get "/authenticate/:username", to: "users.authenticate.index"
-      get "/logout", to: "users.authenticate.logout"
       # get "/users", to: "users.index"
       scope "users" do
         use DuskAPI::JwtMiddleware
@@ -15,6 +14,7 @@ module DuskAPI
         delete "/remove_from/:list_name/:film_id", list_name: /(to_watch|previously_watched)/, to: "users.remove.index"
         put "/move_to_watched/:film_id", to: "users.move.index"
         put "/settings", to: "users.settings"
+        get "/logout", to: "users.authenticate.logout"
       end
     end
   end
