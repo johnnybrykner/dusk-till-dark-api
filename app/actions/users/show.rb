@@ -19,8 +19,8 @@ module DuskAPI
           if user
             response.body = Oj.dump(user)
           else
-            response.status = 401
-            response.body = {error: "Invalid token"}.to_json
+            response.status = 404
+            response.body = {error: "User not found"}.to_json
           end
         end
       end

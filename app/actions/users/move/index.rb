@@ -7,13 +7,12 @@ module DuskAPI
       module Move
         class Index < DuskAPI::Action
           params do
-            required(:username).value(:string)
             required(:film_id).value(:integer)
           end
 
           def handle(request, response)
             response.format = :json
-            if request.env["jwt_username"] != request.params[:username]
+            if !request.env["jwt_username"]
               response.status = 401
               response.body = {error: "Unauthorized"}.to_json
               return
@@ -21,7 +20,7 @@ module DuskAPI
             halt 422, {error: request.params.errors.to_s}.to_json unless request.params.valid?
 
             dynamodb_service = DuskAPI::DynamodbService.new
-            current_user = dynamodb_service.get_user(request.params[:username])
+            current_user = dynamodb_service.get_user(request.env["jwt_username"])
             halt 404, {error: "User not found"}.to_json unless current_user
 
             current_to_watch = current_user["to_watch"]
@@ -37,8 +36,8 @@ module DuskAPI
 
             film_to_move = current_to_watch[index_of_film_to_move]
 
-            dynamodb_service.remove_film(request.params[:username], "to_watch", index_of_film_to_move)
-            updated_user = dynamodb_service.add_film(request.params[:username], "previously_watched", film_to_move)
+            dynamodb_service.remove_film(request.env["jwt_username"], "to_watch", index_of_film_to_move)
+            updated_user = dynamodb_service.add_film(request.env["jwt_username"], "previously_watched", film_to_move)
             response.body = Oj.dump(updated_user["attributes"])
           end
         end

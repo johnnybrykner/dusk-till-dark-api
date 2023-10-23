@@ -7,14 +7,24 @@ module DuskAPI
       module Add
         class Index < DuskAPI::Action
           params do
-            required(:username).value(:string)
             required(:list_name).value(:string)
-            required(:film_to_add).filled(DuskAPI::Types::FilmType)
+            required(:id).value(:integer)
+            required(:name).value(:string)
+            required(:director).value(:string)
+            required(:language).value(:string)
+            required(:length).value(:integer)
+            required(:year).value(:integer)
+            required(:film_genres).array(:hash) do
+              required(:id).filled(:integer)
+              required(:name).filled(:string)
+            end
+            optional(:our_rating).value(:integer)
+            optional(:their_rating).value(:integer)
           end
 
           def handle(request, response)
             response.format = :json
-            if request.env["jwt_username"] != request.params[:username]
+            if !request.env["jwt_username"]
               response.status = 401
               response.body = {error: "Unauthorized"}.to_json
               return
@@ -22,12 +32,12 @@ module DuskAPI
             halt 422, {error: request.params.errors.to_s}.to_json unless request.params.valid?
 
             dynamodb_service = DuskAPI::DynamodbService.new
-            current_user = dynamodb_service.get_user(request.params[:username])
+            current_user = dynamodb_service.get_user(request.env["jwt_username"])
             halt 404, {error: "User not found"}.to_json unless current_user
 
             currently_edited_list = current_user[request.params[:list_name]]
             film_already_added = currently_edited_list && currently_edited_list.any? { |film|
-              film["id"].to_i == request.params[:film_to_add][:id].to_i
+              film["id"].to_i == request.params[:id].to_i
             }
             if film_already_added
               response.status = 409
@@ -35,7 +45,20 @@ module DuskAPI
               return
             end
 
-            updated_user = dynamodb_service.add_film(request.params[:username], request.params[:list_name], request.params[:film_to_add])
+            updated_user = dynamodb_service.add_film(
+              request.env["jwt_username"],
+              request.params[:list_name], {
+                "id" => request.params[:id],
+                "name" => request.params[:name],
+                "director" => request.params[:director],
+                "language" => request.params[:language],
+                "length" => request.params[:length],
+                "year" => request.params[:year],
+                "film_genres" => request.params[:film_genres],
+                "our_rating" => request.params[:our_rating],
+                "their_rating" => request.params[:their_rating],
+              }
+            )
             response.body = Oj.dump(updated_user["attributes"])
           end
         end
